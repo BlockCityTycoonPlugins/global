@@ -1,0 +1,8 @@
+name: BlockCityTycoonGlobal
+version: '${project.version}'
+main: me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal
+authors: [ Darkmun ]
+depend: [ProtocolLib, PacketWrapper, Vault]
+commands:
+  top:
+    description: Показывает топ-10 игроков по численности.
