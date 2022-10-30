@@ -28,7 +28,7 @@ public class PopulationTop {
         }
     }
 
-    public static void showTopTenInChat(Player player) {
+    public static void showTopTen(CommandSender sender) {
         File file = new File(gemsEconomy.getDataFolder(), "data.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
@@ -45,7 +45,7 @@ public class PopulationTop {
         for (int i = 1; i < names.length; i++) {
             names[i] = i + ". " + config.getString("accounts." + uuidsList.get(i - 1) + ".nickname");
         }
-        player.sendMessage(names);
+        sender.sendMessage(names);
     }
 
     private static List<String> getPlayersUUIDList() {

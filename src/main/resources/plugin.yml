@@ -5,4 +5,7 @@ authors: [ Darkmun ]
 depend: [ProtocolLib, PacketWrapper, Vault]
 commands:
   top:
-    description: Показывает топ-10 игроков по численности.
+    description: Показывает топ-10 игроков по численности. С аргументом enable отображает топ в уровне игрока (обновляется каждые несколько секунд).
+  increaseincome:
+    description: Увеличивает доход указанному игроку на заданное количество процентов.
+    #usage: /increaseincome <player> <percent-num>%
