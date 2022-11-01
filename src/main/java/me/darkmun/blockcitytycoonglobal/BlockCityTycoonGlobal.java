@@ -1,6 +1,5 @@
 package me.darkmun.blockcitytycoonglobal;
 
-import me.darkmun.blockcitytycoonglobal.income.IncreaseIncomeCommand;
 import me.darkmun.blockcitytycoonglobal.listeners.NoDamage;
 import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
@@ -14,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class BlockCityTycoonGlobal extends JavaPlugin {
 
     private static BlockCityTycoonGlobal plugin;
-    private static Config incomePercentageConfig = new Config();
     private static Economy econ = null;
     private static Chat chat = null;
     @Override
@@ -22,19 +20,15 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
 
-        incomePercentageConfig.setup(getDataFolder(), "income-percentage");
-        incomePercentageConfig.getConfig().options().copyDefaults(true);
         plugin = this;
 
         if (getConfig().getBoolean("enable")) {
             hookToVault();
-            addExtraIncomeToOnlinePlayers();
             updateTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
 
             getServer().getPluginManager().registerEvents(new NoDamage(), this);
 
             getCommand("top").setExecutor(new TopCommands());
-            getCommand("increaseincome").setExecutor(new IncreaseIncomeCommand());
             getLogger().info("Plugin enabled.");
         }
         else {
@@ -70,17 +64,6 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         return chat != null;
     }
 
-    private void addExtraIncomeToOnlinePlayers() {
-        Bukkit.getScheduler().runTaskTimer(BlockCityTycoonGlobal.getPlugin(), () -> {
-            for (Player pl : getServer().getOnlinePlayers()) {
-                if (getIncomePercentageConfig().getConfig().contains(pl.getUniqueId().toString())) {
-                    econ.depositPlayer(pl, getIncomePercentageConfig().getConfig().getDouble(String.format("%s.extra-income", pl.getUniqueId().toString())));
-                    //Bukkit.getLogger().info(String.valueOf(getIncomePercentageConfig().getConfig().getDouble(String.format("%s.extra-income", pl.getUniqueId().toString()))));
-                }
-            }
-        }, 0L, 20L);
-    }
-
     private void updateTopPlaceForOnlinePlayers(long periodToShow) {
         Bukkit.getScheduler().runTaskTimer(BlockCityTycoonGlobal.getPlugin(), () -> {
             for (Player pl : getServer().getOnlinePlayers()) {
@@ -94,9 +77,6 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         getLogger().info("Plugin disabled.");
     }
 
-    public static Config getIncomePercentageConfig() {
-        return incomePercentageConfig;
-    }
     public static BlockCityTycoonGlobal getPlugin() {
         return plugin;
     }
