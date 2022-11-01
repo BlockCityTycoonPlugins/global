@@ -1,22 +1,22 @@
 package me.darkmun.blockcitytycoonglobal;
 
 import me.darkmun.blockcitytycoonglobal.income.IncreaseIncomeCommand;
+import me.darkmun.blockcitytycoonglobal.listeners.NoDamage;
 import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Iterator;
-import java.util.List;
-
 public final class BlockCityTycoonGlobal extends JavaPlugin {
 
     private static BlockCityTycoonGlobal plugin;
     private static Config incomePercentageConfig = new Config();
     private static Economy econ = null;
+    private static Chat chat = null;
     @Override
     public void onEnable() {
         getConfig().options().copyDefaults(true);
@@ -29,7 +29,9 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         if (getConfig().getBoolean("enable")) {
             hookToVault();
             addExtraIncomeToOnlinePlayers();
-            showTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
+            updateTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
+
+            getServer().getPluginManager().registerEvents(new NoDamage(), this);
 
             getCommand("top").setExecutor(new TopCommands());
             getCommand("increaseincome").setExecutor(new IncreaseIncomeCommand());
@@ -47,6 +49,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        setupChat();
     }
 
     private boolean setupEconomy() {
@@ -61,6 +64,12 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         return econ != null;
     }
 
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
+    }
+
     private void addExtraIncomeToOnlinePlayers() {
         Bukkit.getScheduler().runTaskTimer(BlockCityTycoonGlobal.getPlugin(), () -> {
             for (Player pl : getServer().getOnlinePlayers()) {
@@ -72,12 +81,10 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         }, 0L, 20L);
     }
 
-    private void showTopPlaceForOnlinePlayers(long periodToShow) {
+    private void updateTopPlaceForOnlinePlayers(long periodToShow) {
         Bukkit.getScheduler().runTaskTimer(BlockCityTycoonGlobal.getPlugin(), () -> {
             for (Player pl : getServer().getOnlinePlayers()) {
-                if (pl.hasPermission("bctglobal.topplace")) {
-                    PopulationTop.showPlaceAsExpLevel(pl);
-                }
+                PopulationTop.updatePlaceInExpLevelAndChatSuffix(pl);
             }
         }, 10, periodToShow);
     }
@@ -96,5 +103,8 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
 
     public static Economy getEconomy() {
         return econ;
+    }
+    public static Chat getChat() {
+        return chat;
     }
 }

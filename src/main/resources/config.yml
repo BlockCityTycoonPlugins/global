@@ -1,2 +1,4 @@
 enable: true
+hide-players: false
+disable-damage: true
 top-update-time: 10  #seconds
