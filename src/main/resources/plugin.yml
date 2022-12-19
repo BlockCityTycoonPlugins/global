@@ -9,3 +9,5 @@ commands:
   increaseincome:
     description: Увеличивает доход указанному игроку на заданное количество процентов.
     #usage: /increaseincome <player> <percent-num>%
+  sell:
+    description: Для продажи блоков\слитков\гемов

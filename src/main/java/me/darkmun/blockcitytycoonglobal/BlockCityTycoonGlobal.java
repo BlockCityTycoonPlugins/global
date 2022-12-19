@@ -1,5 +1,13 @@
 package me.darkmun.blockcitytycoonglobal;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import me.darkmun.blockcitytycoonglobal.commands.SellCommand;
+import me.darkmun.blockcitytycoonglobal.listeners.BlockChangeListener;
+import me.darkmun.blockcitytycoonglobal.listeners.HidePlayers;
+import me.darkmun.blockcitytycoonglobal.listeners.MaxHeightListener;
 import me.darkmun.blockcitytycoonglobal.listeners.NoDamage;
 import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
@@ -15,6 +23,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
     private static BlockCityTycoonGlobal plugin;
     private static Economy econ = null;
     private static Chat chat = null;
+    private static Config gemsEconomyConfig = new Config();
     @Override
     public void onEnable() {
         getConfig().options().copyDefaults(true);
@@ -23,11 +32,28 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         plugin = this;
 
         if (getConfig().getBoolean("enable")) {
+            gemsEconomyConfig.setup(Bukkit.getPluginManager().getPlugin("GemsEconomy").getDataFolder(), "data");
+
             hookToVault();
             updateTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
 
-            getServer().getPluginManager().registerEvents(new NoDamage(), this);
+            ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
+
+            if (getConfig().getBoolean("disable-damage")) {
+                getServer().getPluginManager().registerEvents(new NoDamage(), this);
+            }
+            if (getConfig().getBoolean("hide-players")) {
+                getServer().getPluginManager().registerEvents(new HidePlayers(), this);
+            }
+            if (getConfig().getBoolean("max-fly-height.enable")) {
+                getServer().getPluginManager().registerEvents(new MaxHeightListener(), this);
+            }
+            if (getConfig().getBoolean("disable-block-change")) {
+                manager.addPacketListener(new BlockChangeListener(this, ListenerPriority.LOWEST, PacketType.Play.Server.BLOCK_CHANGE));
+            }
+
+            getCommand("sell").setExecutor(new SellCommand());
             getCommand("top").setExecutor(new TopCommands());
             getLogger().info("Plugin enabled.");
         }
@@ -87,4 +113,8 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
     public static Chat getChat() {
         return chat;
     }
+    public static Config getGemsEconomyConfig() {
+        return gemsEconomyConfig;
+    }
+
 }

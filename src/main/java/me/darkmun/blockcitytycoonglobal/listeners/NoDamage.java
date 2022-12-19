@@ -8,8 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public class NoDamage implements Listener {
     @EventHandler
     public void DamageEvent(EntityDamageEvent e) {
-        if (BlockCityTycoonGlobal.getPlugin().getConfig().getBoolean("disable-damage")) {
-            e.setCancelled(true);
-        }
+        e.setCancelled(true);
     }
 }

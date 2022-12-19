@@ -1,4 +1,21 @@
 enable: true
 hide-players: false
 disable-damage: true
+disable-block-change: true
 top-update-time: 10  #seconds
+max-fly-height:
+  enable: false
+  value: 120
+materials-value:
+  iron_ore: 5
+  iron_block: 5
+  iron_ingot: 5
+  gold_ore: 5
+  gold_block: 5
+  gold_ingot: 5
+  diamond_ore: 5
+  diamond_block: 5
+  diamond: 5
+  emerald_ore: 5
+  emerald_block: 5
+  emerald_ingot: 5
