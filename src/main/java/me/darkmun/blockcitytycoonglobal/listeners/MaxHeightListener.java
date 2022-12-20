@@ -1,6 +1,7 @@
 package me.darkmun.blockcitytycoonglobal.listeners;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
+import me.darkmun.blockcitytycoonglobal.storages.Configs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class MaxHeightListener implements Listener {
-    int maxHeight = BlockCityTycoonGlobal.getPlugin().getConfig().getInt("max-fly-height.value");
+    int maxHeight = Configs.mainConfig.getInt("max-fly-height.value");
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {

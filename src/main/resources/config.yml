@@ -6,6 +6,13 @@ top-update-time: 10  #seconds
 max-fly-height:
   enable: false
   value: 120
+borders:
+  map:
+    x:
+    z:
+  city:
+    x:
+    z:
 materials-value:
   iron_ore: 5
   iron_block: 5

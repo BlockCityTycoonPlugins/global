@@ -2,7 +2,6 @@ package me.darkmun.blockcitytycoonglobal.top;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
