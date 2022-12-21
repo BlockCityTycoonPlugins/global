@@ -11,3 +11,5 @@ commands:
     #usage: /increaseincome <player> <percent-num>%
   sell:
     description: Для продажи блоков\слитков\гемов
+  givebook:
+    description: Выдача гайда

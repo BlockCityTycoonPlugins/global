@@ -4,11 +4,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
+import me.darkmun.blockcitytycoonglobal.commands.BookTestCommand;
 import me.darkmun.blockcitytycoonglobal.commands.SellCommand;
-import me.darkmun.blockcitytycoonglobal.listeners.BlockChangeListener;
-import me.darkmun.blockcitytycoonglobal.listeners.HidePlayers;
-import me.darkmun.blockcitytycoonglobal.listeners.MaxHeightListener;
-import me.darkmun.blockcitytycoonglobal.listeners.NoDamage;
+import me.darkmun.blockcitytycoonglobal.listeners.*;
 import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
 import net.milkbowl.vault.chat.Chat;
@@ -23,7 +21,8 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
     private static BlockCityTycoonGlobal plugin;
     private static Economy econ = null;
     private static Chat chat = null;
-    private static Config gemsEconomyConfig = new Config();
+    private static final Config gemsEconomyConfig = new Config();
+    private static final Config bookConfig = new Config();
     @Override
     public void onEnable() {
         getConfig().options().copyDefaults(true);
@@ -33,13 +32,15 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
 
         if (getConfig().getBoolean("enable")) {
             gemsEconomyConfig.setup(Bukkit.getPluginManager().getPlugin("GemsEconomy").getDataFolder(), "data");
+            bookConfig.setup(getDataFolder(), "book");
 
             hookToVault();
             updateTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
 
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
-
+            // После тестов, убрать комм
+            //getServer().getPluginManager().registerEvents(new JoinListener(), this);
             if (getConfig().getBoolean("disable-damage")) {
                 getServer().getPluginManager().registerEvents(new NoDamage(), this);
             }
@@ -53,6 +54,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
                 manager.addPacketListener(new BlockChangeListener(this, ListenerPriority.LOWEST, PacketType.Play.Server.BLOCK_CHANGE));
             }
 
+            getCommand("givebook").setExecutor(new BookTestCommand());
             getCommand("sell").setExecutor(new SellCommand());
             getCommand("top").setExecutor(new TopCommands());
             getLogger().info("Plugin enabled.");
@@ -117,4 +119,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         return gemsEconomyConfig;
     }
 
+    public static Config getBookConfig() {
+        return bookConfig;
+    }
 }
