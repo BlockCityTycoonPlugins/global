@@ -25,67 +25,93 @@ public class SellCommand implements CommandExecutor {
             if (args.length == 3 || args.length == 2) {
                 Player player = Bukkit.getPlayerExact(args[0]);
                 if (player != null) {
-                    try {
-                        Material material = Material.valueOf(args[1].toUpperCase());
-                        if (isMineBlock(material) || isFoundryOutMaterial(material)) {
-                            Inventory inventory = player.getInventory();
-                            Map<Integer, ? extends ItemStack> materialSlotsAndItemStacks =  inventory.all(material);
-                            if (!materialSlotsAndItemStacks.isEmpty()) {
-                                double materialSellValue = getMaterialSellValue(material);
-                                if (args.length == 2) {
-                                    ItemStack materialItemStack = materialSlotsAndItemStacks.values().stream().findFirst().get();
-                                    BlockCityTycoonGlobal.getEconomy().depositPlayer(player, materialSellValue);
-                                    materialItemStack.setAmount(materialItemStack.getAmount() - 1);
-                                    player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + materialSellValue + "$");
-                                } else {
-                                    double allSoldValue = 0;
-                                    if (args[2].equals("all")) {
-                                        for (Map.Entry<Integer, ? extends ItemStack> integerAndItemStackEntry : materialSlotsAndItemStacks.entrySet()) {
-                                            ItemStack materialItemStack = integerAndItemStackEntry.getValue();
-                                            double itemStackValue = materialSellValue * materialItemStack.getAmount();
-                                            BlockCityTycoonGlobal.getEconomy().depositPlayer(player, itemStackValue);
-                                            allSoldValue += itemStackValue;
-                                            materialItemStack.setAmount(0);
-                                        }
-                                    } else {
-                                        try {
-                                            int sellAmount = Integer.parseInt(args[2]);
-                                            for (Map.Entry<Integer, ? extends ItemStack> integerAndItemStackEntry : materialSlotsAndItemStacks.entrySet()) {
-                                                ItemStack materialItemStack = integerAndItemStackEntry.getValue();
-
-                                                double itemStackValue;
-                                                if (sellAmount < materialItemStack.getAmount()) {
-                                                    itemStackValue = materialSellValue * sellAmount;
-                                                    materialItemStack.setAmount(materialItemStack.getAmount() - sellAmount);
-                                                    sellAmount = 0;
-                                                } else {
-                                                    itemStackValue = materialSellValue * materialItemStack.getAmount();
-                                                    sellAmount -= materialItemStack.getAmount();
-                                                    materialItemStack.setAmount(0);
-                                                }
-                                                BlockCityTycoonGlobal.getEconomy().depositPlayer(player, itemStackValue);
-                                                allSoldValue += itemStackValue;
-
-                                                if (sellAmount == 0) {
-                                                    break;
-                                                }
-                                            }
-                                        } catch (NumberFormatException ex) {
-                                            sender.sendMessage(ChatColor.RED + "Некорректно введен третий аргумент");
-                                            sendUsage(sender);
-                                        }
-                                    }
-
-                                    player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + allSoldValue + "$");
+                    if (args.length == 2 && (args[1].equals("blocks") || args[1].equals("ingots"))) {
+                        Inventory inventory = player.getInventory();
+                        ItemStack[] contents = inventory.getStorageContents();
+                        double allSoldValue = 0;
+                        if (args[1].equals("blocks")) {
+                            for (ItemStack content : contents) {
+                                if (content != null && isMineBlock(content.getType())) {
+                                    allSoldValue += getMaterialSellValue(content.getType()) * content.getAmount();
+                                    content.setAmount(0);
                                 }
-                            } else {
-                                player.sendMessage(ChatColor.GOLD + "У вас нет этого материала для продажи");  // вообще как-то тупо все отправлять sender'у, а тут отправить player'у
                             }
                         } else {
-                            sender.sendMessage(ChatColor.RED + "Материал " + args[1] + " не является продаваемым");
+                            for (ItemStack content : contents) {
+                                if (content != null && isFoundryOutMaterial(content.getType())) {
+                                    allSoldValue += getMaterialSellValue(content.getType()) * content.getAmount();
+                                    content.setAmount(0);
+                                }
+                            }
                         }
-                    } catch (IllegalArgumentException ex) {
-                        sender.sendMessage(ChatColor.RED + args[1] + " не является материалом");
+
+                        if (allSoldValue == 0) {
+                            player.sendMessage(ChatColor.GOLD + "У вас нет ресурсов для продажи");
+                        } else {
+                            BlockCityTycoonGlobal.getEconomy().depositPlayer(player, allSoldValue);
+                            player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + allSoldValue + "$");
+                        }
+                    } else {
+                        try {
+                            Material material = Material.valueOf(args[1].toUpperCase());
+                            if (isMineBlock(material) || isFoundryOutMaterial(material)) {
+                                Inventory inventory = player.getInventory();
+                                Map<Integer, ? extends ItemStack> materialSlotsAndItemStacks =  inventory.all(material);
+                                if (!materialSlotsAndItemStacks.isEmpty()) {
+                                    double materialSellValue = getMaterialSellValue(material);
+                                    if (args.length == 2) {
+                                        ItemStack materialItemStack = materialSlotsAndItemStacks.values().stream().findFirst().get();
+                                        BlockCityTycoonGlobal.getEconomy().depositPlayer(player, materialSellValue);
+                                        materialItemStack.setAmount(materialItemStack.getAmount() - 1);
+                                        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + materialSellValue + "$");
+                                    } else {
+                                        double allSoldValue = 0;
+                                        if (args[2].equals("all")) {
+                                            for (Map.Entry<Integer, ? extends ItemStack> integerAndItemStackEntry : materialSlotsAndItemStacks.entrySet()) {
+                                                ItemStack materialItemStack = integerAndItemStackEntry.getValue();
+                                                double itemStackValue = materialSellValue * materialItemStack.getAmount();
+                                                allSoldValue += itemStackValue;
+                                                materialItemStack.setAmount(0);
+                                            }
+                                        } else {
+                                            try {
+                                                int sellAmount = Integer.parseInt(args[2]);
+                                                for (Map.Entry<Integer, ? extends ItemStack> integerAndItemStackEntry : materialSlotsAndItemStacks.entrySet()) {
+                                                    ItemStack materialItemStack = integerAndItemStackEntry.getValue();
+
+                                                    double itemStackValue;
+                                                    if (sellAmount < materialItemStack.getAmount()) {
+                                                        itemStackValue = materialSellValue * sellAmount;
+                                                        materialItemStack.setAmount(materialItemStack.getAmount() - sellAmount);
+                                                        sellAmount = 0;
+                                                    } else {
+                                                        itemStackValue = materialSellValue * materialItemStack.getAmount();
+                                                        sellAmount -= materialItemStack.getAmount();
+                                                        materialItemStack.setAmount(0);
+                                                    }
+                                                    allSoldValue += itemStackValue;
+
+                                                    if (sellAmount == 0) {
+                                                        break;
+                                                    }
+                                                }
+                                            } catch (NumberFormatException ex) {
+                                                sender.sendMessage(ChatColor.RED + "Некорректно введен третий аргумент");
+                                                sendUsage(sender);
+                                            }
+                                        }
+                                        BlockCityTycoonGlobal.getEconomy().depositPlayer(player, allSoldValue);
+                                        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + allSoldValue + "$");
+                                    }
+                                } else {
+                                    player.sendMessage(ChatColor.GOLD + "У вас нет этого материала для продажи");  // вообще как-то тупо все отправлять sender'у, а тут отправить player'у
+                                }
+                            } else {
+                                sender.sendMessage(ChatColor.RED + "Материал " + args[1] + " не является продаваемым");
+                            }
+                        } catch (IllegalArgumentException ex) {
+                            sender.sendMessage(ChatColor.RED + args[1] + " не является материалом");
+                        }
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Игрока с ником " + args[0] + " нет на сервере");

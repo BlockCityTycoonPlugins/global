@@ -3,6 +3,11 @@ hide-players: false
 disable-damage: true
 disable-block-change: true
 top-update-time: 10  #seconds
+spawn:
+  x: -82
+  y: 40
+  z: 13
+  time-to-enable: 1800  #seconds
 max-fly-height:
   enable: false
   value: 120
@@ -25,4 +30,4 @@ materials-value:
   diamond: 5
   emerald_ore: 5
   emerald_block: 5
-  emerald_ingot: 5
+  emerald: 5

@@ -6,10 +6,9 @@ depend: [ProtocolLib, PacketWrapper, Vault]
 commands:
   top:
     description: Показывает топ-10 игроков по численности. С аргументом enable отображает топ в уровне игрока (обновляется каждые несколько секунд).
-  increaseincome:
-    description: Увеличивает доход указанному игроку на заданное количество процентов.
-    #usage: /increaseincome <player> <percent-num>%
   sell:
     description: Для продажи блоков\слитков\гемов
   givebook:
     description: Выдача гайда
+  spawn:
+    description: Телепортация на спавн раз в 30 минут

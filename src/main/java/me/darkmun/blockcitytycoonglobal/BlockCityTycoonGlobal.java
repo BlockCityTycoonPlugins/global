@@ -6,12 +6,14 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import me.darkmun.blockcitytycoonglobal.commands.BookTestCommand;
 import me.darkmun.blockcitytycoonglobal.commands.SellCommand;
+import me.darkmun.blockcitytycoonglobal.spawn.SpawnCommand;
 import me.darkmun.blockcitytycoonglobal.listeners.*;
 import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +36,9 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
             gemsEconomyConfig.setup(Bukkit.getPluginManager().getPlugin("GemsEconomy").getDataFolder(), "data");
             bookConfig.setup(getDataFolder(), "book");
 
+            World world = Bukkit.getWorld("world");
+            world.setSpawnLocation(getConfig().getInt("spawn.x"), getConfig().getInt("spawn.y"), getConfig().getInt("spawn.z"));
+
             hookToVault();
             updateTopPlaceForOnlinePlayers(BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
 
@@ -54,6 +59,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
                 manager.addPacketListener(new BlockChangeListener(this, ListenerPriority.LOWEST, PacketType.Play.Server.BLOCK_CHANGE));
             }
 
+            getCommand("spawn").setExecutor(new SpawnCommand());
             getCommand("givebook").setExecutor(new BookTestCommand());
             getCommand("sell").setExecutor(new SellCommand());
             getCommand("top").setExecutor(new TopCommands());

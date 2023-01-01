@@ -1,12 +1,9 @@
 package me.darkmun.blockcitytycoonglobal.top;
 
-import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class TopCommands implements CommandExecutor {
     @Override
@@ -17,6 +14,7 @@ public class TopCommands implements CommandExecutor {
         }
         else {
             sender.sendMessage(ChatColor.RED + "Лишние аргументы в команде");
+            sender.sendMessage(ChatColor.RED + "Применение: /top");
         }
         /*else if (args.length == 1) {
             if (args[0].equals("enable")) {
