@@ -1,5 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.spawn;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -19,24 +20,46 @@ public class SpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (sender instanceof Player) {
+        if (args.length == 2 && args[0].equals("enable")) {
+            if (sender.hasPermission("bctglobal.spawn.enable")) {
+                Player player = Bukkit.getPlayerExact(args[1]);
+                if (player != null) {
+                    UUID playerUID = player.getUniqueId();
+                    SpawnTimer playerSpawnTimer = spawnTimers.get(playerUID);
+                    if (playerSpawnTimer == null) {
+                        playerSpawnTimer = new SpawnTimer();
+                        spawnTimers.put(playerUID, playerSpawnTimer);
+                    }
+                    playerSpawnTimer.stopWork();
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Такого игрока сейчас нет на сервере");
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "У вас недостаточно прав");
+            }
+        } else if (sender instanceof Player) {
             Player player = (Player) sender;
             UUID playerUID = player.getUniqueId();
-            SpawnTimer playerSpawnTimer = spawnTimers.get(playerUID);
-            if (playerSpawnTimer != null && !playerSpawnTimer.isSpawnEnabled()) {
-                player.sendMessage(ChatColor.GOLD + "Телепортация на спавн станет доступна через: " + playerSpawnTimer.getRemainingTime());
-            } else {
-                int spawnX = mainConfig.getInt("spawn.x");
-                int spawnY = mainConfig.getInt("spawn.y");
-                int spawnZ = mainConfig.getInt("spawn.z");
-                Location spawnLocation = new Location(player.getWorld(), spawnX, spawnY, spawnZ);
+            if (args.length == 0) {
+                SpawnTimer playerSpawnTimer = spawnTimers.get(playerUID);
+                if (playerSpawnTimer != null && !playerSpawnTimer.isSpawnEnabled()) {
+                    player.sendMessage(ChatColor.GOLD + "Телепортация на спавн станет доступна через: " + playerSpawnTimer.getRemainingTime());
+                } else {
+                    int spawnX = mainConfig.getInt("spawn.x");
+                    int spawnY = mainConfig.getInt("spawn.y");
+                    int spawnZ = mainConfig.getInt("spawn.z");
+                    Location spawnLocation = new Location(player.getWorld(), spawnX, spawnY, spawnZ);
 
-                if (playerSpawnTimer == null) {
-                    playerSpawnTimer = new SpawnTimer();
-                    spawnTimers.put(playerUID, playerSpawnTimer);
+                    if (playerSpawnTimer == null) {
+                        playerSpawnTimer = new SpawnTimer();
+                        spawnTimers.put(playerUID, playerSpawnTimer);
+                    }
+                    playerSpawnTimer.startWork();
+                    player.teleport(spawnLocation);
                 }
-                playerSpawnTimer.startWork();
-                player.teleport(spawnLocation);
+            } else {
+                sender.sendMessage(ChatColor.RED + "В команде не должно быть аргументов");
+                sendUsage(player);
             }
         }
 

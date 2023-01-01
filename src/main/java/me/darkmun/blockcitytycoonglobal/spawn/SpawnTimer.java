@@ -13,17 +13,21 @@ public class SpawnTimer {
     private Task spawnTaskTimer;
 
     public SpawnTimer() {
-        this.spawnEnable = false;
+        this.spawnEnable = true;
 
         this.spawnTaskTimer = new Task(BlockCityTycoonGlobal.getPlugin(), () -> {
-            spawnEnable = true;
-            spawnTaskTimer.stop();
+            stopWork();
         }, TICKS_PER_SECOND * Configs.mainConfig.getLong("spawn.time-to-enable"));
     }
 
     public void startWork() {
         this.spawnEnable = false;
         spawnTaskTimer.run();
+    }
+
+    public void stopWork() {
+        this.spawnEnable = true;
+        spawnTaskTimer.stop();
     }
 
     public String getRemainingTime() {

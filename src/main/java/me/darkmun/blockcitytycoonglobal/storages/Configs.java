@@ -1,7 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.storages;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
-import me.darkmun.blockcitytycoonglobal.Config;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Configs {
