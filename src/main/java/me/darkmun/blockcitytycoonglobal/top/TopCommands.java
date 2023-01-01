@@ -16,22 +16,6 @@ public class TopCommands implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Лишние аргументы в команде");
             sender.sendMessage(ChatColor.RED + "Применение: /top");
         }
-        /*else if (args.length == 1) {
-            if (args[0].equals("enable")) {
-                if (sender instanceof Player) {
-                    Player pl = (Player) sender;
-                    Bukkit.getScheduler().runTaskTimer(BlockCityTycoonGlobal.getPlugin(), () -> {
-                        if (pl.isOnline()) {
-                            PopulationTop.showPlaceAsExpLevel(pl);
-                        }
-                    }, 10, BlockCityTycoonGlobal.getPlugin().getConfig().getLong("top-update-time"));
-                    return true;
-                }
-                else {
-                    sender.sendMessage("Вы не игрок.");
-                }
-            }
-        }*/
         return false;
     }
 }

@@ -72,12 +72,10 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
 
 
     private void hookToVault() {
-        if (!setupEconomy() ) {
+        if (!setupEconomy() || !setupChat()) {
             getPlugin().getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
-            return;
         }
-        setupChat();
     }
 
     private boolean setupEconomy() {

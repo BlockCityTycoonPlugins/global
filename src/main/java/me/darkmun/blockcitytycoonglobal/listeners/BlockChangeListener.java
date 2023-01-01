@@ -5,9 +5,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
@@ -21,9 +19,9 @@ public class BlockChangeListener extends PacketAdapter {
     public final static int STONE_MINE_LOW_Z = 0;
     public final static int STONE_MINE_HIGH_Z = 4;
 
-    public BlockChangeListener(Plugin plugin, PacketType... types) {
+    /*public BlockChangeListener(Plugin plugin, PacketType... types) {
         super(plugin, types);
-    }
+    }*/
 
     public BlockChangeListener(Plugin plugin, ListenerPriority listenerPriority, PacketType... types) {
         super(plugin, listenerPriority, types);
@@ -40,7 +38,6 @@ public class BlockChangeListener extends PacketAdapter {
                 || (y < STONE_MINE_LOW_Y || y > STONE_MINE_HIGH_Y)
                 || (z < STONE_MINE_LOW_Z || z > STONE_MINE_HIGH_Z))) {
 
-            Bukkit.getLogger().info(ChatColor.RED + "NOT MINE");
             Set<String> strings = Bukkit.getPluginManager().getPlugin("BlockCityTycoonEvents").getConfig().getConfigurationSection("rain-event.ritual-blocks-coord").getKeys(false);
             if (strings.stream().noneMatch(str -> { //эта проверка нужна для правильной работы ивента дождя
                 int ritualX = Bukkit.getPluginManager().getPlugin("BlockCityTycoonEvents").getConfig().getInt("rain-event.ritual-blocks-coord." + str + ".x");
@@ -48,7 +45,6 @@ public class BlockChangeListener extends PacketAdapter {
                 int ritualZ = Bukkit.getPluginManager().getPlugin("BlockCityTycoonEvents").getConfig().getInt("rain-event.ritual-blocks-coord." + str + ".z");
                 return x == ritualX && y == ritualY && z == ritualZ;
             })) {
-                Bukkit.getLogger().info(ChatColor.RED + "RAIN EVENT BLOCKS NOT FOUND");
                 Set<String> furnaces = Bukkit.getPluginManager().getPlugin("BlockCityTycoonFoundry").getConfig().getConfigurationSection("furnaces").getKeys(false);
                 if (furnaces.stream().noneMatch(furnace -> { //эта проверка нужна для правильной работы плавильни
                     int furnaceX = Bukkit.getPluginManager().getPlugin("BlockCityTycoonFoundry").getConfig().getInt(String.format("furnaces.%s.x", furnace));
@@ -56,7 +52,6 @@ public class BlockChangeListener extends PacketAdapter {
                     int furnaceZ = Bukkit.getPluginManager().getPlugin("BlockCityTycoonFoundry").getConfig().getInt(String.format("furnaces.%s.z", furnace));
                     return x == furnaceX && y == furnaceY && z == furnaceZ;
                 })) {
-                    Bukkit.getLogger().info(ChatColor.RED + "FURNACE NOT FOUND");
                     event.setCancelled(true);
                 }
             }

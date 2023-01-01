@@ -1,8 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.listeners;
 
-import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import me.darkmun.blockcitytycoonglobal.storages.Configs;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,7 +20,7 @@ public class MaxHeightListener implements Listener {
         }
         else if (y > maxHeight + 10) {
             pl.teleport(new Location(pl.getWorld(), e.getFrom().getX(), maxHeight - 5, e.getFrom().getZ()));
-            pl.sendMessage(ChatColor.GOLD + "АХХАХАХ, думал получится за карту улететь? К сожалению ты потратил время зря)");
+            pl.sendMessage(ChatColor.GOLD + "К сожалению, ты потратил время зря =)");
         }
     }
 }

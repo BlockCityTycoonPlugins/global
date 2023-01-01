@@ -1,7 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.listeners;
 
 import me.darkmun.blockcitytycoonglobal.GuideBook;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,15 +9,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 
 public class JoinListener implements Listener {
+    private static final int BOOK_NOT_FOUND = -1;
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Inventory inventory = player.getInventory();
-        int notFound = -1;
-        Bukkit.getLogger().info("First Written book: " + inventory.first(Material.WRITTEN_BOOK));
-        if (inventory.first(Material.WRITTEN_BOOK) == notFound) {
-            Bukkit.getLogger().info("Creating");
+        if (inventory.first(Material.WRITTEN_BOOK) == BOOK_NOT_FOUND) {
             inventory.addItem(new GuideBook());
         }
     }

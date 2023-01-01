@@ -1,23 +1,19 @@
 package me.darkmun.blockcitytycoonglobal.top;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
-import org.bukkit.Bukkit;
+import me.darkmun.blockcitytycoonglobal.Config;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PopulationTop {
-    private static Plugin gemsEconomy = Bukkit.getServer().getPluginManager().getPlugin("GemsEconomy");
-    private static final FileConfiguration gemsConfig = YamlConfiguration.loadConfiguration(new File(gemsEconomy.getDataFolder(), "data.yml"));
+    private static final Config gemsConfig = BlockCityTycoonGlobal.getGemsEconomyConfig();
 
     public static void updatePlaceInExpLevelAndChatSuffix(Player player) {
-        if (gemsConfig.contains("accounts." + player.getUniqueId().toString() + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8")) {
+        gemsConfig.reloadConfig();
+        if (gemsConfig.getConfig().contains("accounts." + player.getUniqueId().toString() + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8")) {
             List<String> uuidsList = getPlayersUUIDList();
             int placeInTop = uuidsList.indexOf(player.getUniqueId().toString()) + 1;
             setPlaceToExpLevel(player, placeInTop);
@@ -38,7 +34,7 @@ public class PopulationTop {
 
         names[0] = String.format("Топ %d игроков по численности:", names.length - 1);
         for (int i = 1; i < names.length; i++) {
-            names[i] = i + ". " + gemsConfig.getString("accounts." + uuidsList.get(i - 1) + ".nickname");
+            names[i] = i + ". " + gemsConfig.getConfig().getString("accounts." + uuidsList.get(i - 1) + ".nickname");
         }
         sender.sendMessage(names);
     }
@@ -58,13 +54,13 @@ public class PopulationTop {
     private static List<String> getPlayersUUIDList() {
 
 
-        List<String> uuidsList = gemsConfig.getConfigurationSection("accounts").getKeys(false).stream().filter(uuid -> {
-            return gemsConfig.contains("accounts." + uuid + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8");
-        }).distinct().collect(Collectors.toList());
+        List<String> uuidsList = gemsConfig.getConfig().getConfigurationSection("accounts").getKeys(false).stream().filter(uuid ->
+                gemsConfig.getConfig().contains("accounts." + uuid + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8")
+                ).distinct().collect(Collectors.toList());
 
         Comparator<? super String> comparator = (e1, e2) -> {
-            double double1 = gemsConfig.getDouble("accounts." + e1 + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8");
-            double double2 = gemsConfig.getDouble("accounts." + e2 + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8");
+            double double1 = gemsConfig.getConfig().getDouble("accounts." + e1 + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8");
+            double double2 = gemsConfig.getConfig().getDouble("accounts." + e2 + ".balances.e2d28c59-70e6-4fa3-ac58-2018569c08a8");
             return -Double.compare(double1, double2);
         };
         uuidsList.sort(comparator);

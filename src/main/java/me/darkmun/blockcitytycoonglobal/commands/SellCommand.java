@@ -60,7 +60,8 @@ public class SellCommand implements CommandExecutor {
                                 if (!materialSlotsAndItemStacks.isEmpty()) {
                                     double materialSellValue = getMaterialSellValue(material);
                                     if (args.length == 2) {
-                                        ItemStack materialItemStack = materialSlotsAndItemStacks.values().stream().findFirst().get();
+                                        ItemStack materialItemStack = materialSlotsAndItemStacks.values().stream().findFirst().orElse(null);
+                                        assert materialItemStack != null;
                                         BlockCityTycoonGlobal.getEconomy().depositPlayer(player, materialSellValue);
                                         materialItemStack.setAmount(materialItemStack.getAmount() - 1);
                                         player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + materialSellValue + "$");
