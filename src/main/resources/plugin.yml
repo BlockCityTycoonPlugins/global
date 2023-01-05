@@ -12,3 +12,5 @@ commands:
     description: Выдача гайда
   spawn:
     description: Телепортация на спавн раз в 30 минут
+  flight:
+    description: Позволяет давать игроку/забирать у игрока возможность к полету

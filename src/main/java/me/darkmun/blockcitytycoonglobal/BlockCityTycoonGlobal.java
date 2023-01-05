@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
+import me.darkmun.blockcitytycoonglobal.commands.AllowFlightCommand;
 import me.darkmun.blockcitytycoonglobal.commands.BookTestCommand;
 import me.darkmun.blockcitytycoonglobal.commands.SellCommand;
 import me.darkmun.blockcitytycoonglobal.spawn.SpawnCommand;
@@ -12,15 +13,28 @@ import me.darkmun.blockcitytycoonglobal.top.PopulationTop;
 import me.darkmun.blockcitytycoonglobal.top.TopCommands;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.util.ShortConsoleLogFormatter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public final class BlockCityTycoonGlobal extends JavaPlugin {
 
     private static BlockCityTycoonGlobal plugin;
+    private final PluginLogger donateLogger = new PluginLogger(this);
     private static Economy econ = null;
     private static Chat chat = null;
     private static final Config gemsEconomyConfig = new Config();
@@ -33,6 +47,18 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
         plugin = this;
 
         if (getConfig().getBoolean("enable")) {
+            donateLogger.setUseParentHandlers(false);
+            try {
+                File file = new File(getDataFolder().getPath() + "/logs");
+                @SuppressWarnings("unused")
+                boolean created = file.mkdirs();
+                FileHandler fileHandler = new FileHandler(getDataFolder().getPath() + "/logs/donate%g.log", 524288, 50, true);
+                fileHandler.setFormatter(new ShortConsoleLogFormatter(((CraftServer) getServer()).getServer()));
+                donateLogger.addHandler(fileHandler);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             gemsEconomyConfig.setup(Bukkit.getPluginManager().getPlugin("GemsEconomy").getDataFolder(), "data");
             bookConfig.setup(getDataFolder(), "book");
 
@@ -59,6 +85,7 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
                 manager.addPacketListener(new BlockChangeListener(this, ListenerPriority.LOWEST, PacketType.Play.Server.BLOCK_CHANGE));
             }
 
+            getCommand("flight").setExecutor(new AllowFlightCommand());
             getCommand("spawn").setExecutor(new SpawnCommand());
             getCommand("givebook").setExecutor(new BookTestCommand());
             getCommand("sell").setExecutor(new SellCommand());
@@ -111,6 +138,9 @@ public final class BlockCityTycoonGlobal extends JavaPlugin {
 
     public static BlockCityTycoonGlobal getPlugin() {
         return plugin;
+    }
+    public PluginLogger getDonateLogger() {
+        return donateLogger;
     }
 
     public static Economy getEconomy() {
