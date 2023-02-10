@@ -2,7 +2,6 @@ package me.darkmun.blockcitytycoonglobal.spawn;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import me.darkmun.blockcitytycoonglobal.Task;
-import me.darkmun.blockcitytycoonglobal.storages.Configs;
 
 public class SpawnTimer {
 
@@ -18,7 +17,7 @@ public class SpawnTimer {
         this.spawnTaskTimer = new Task(
                 BlockCityTycoonGlobal.getPlugin(),
                 this::stopWork,
-                TICKS_PER_SECOND * Configs.mainConfig.getLong("spawn.time-to-enable"));
+                TICKS_PER_SECOND * BlockCityTycoonGlobal.getPlugin().getConfig().getLong("spawn.time-to-enable"));
     }
 
     public void startWork() {

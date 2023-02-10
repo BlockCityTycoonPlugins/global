@@ -1,5 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.listeners;
 
+import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,10 +9,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.List;
 
-import static me.darkmun.blockcitytycoonglobal.storages.Configs.mainConfig;
-
 public class BordersListener implements Listener {
 
+    private static final BlockCityTycoonGlobal BCTGlobal = BlockCityTycoonGlobal.getPlugin();
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -22,10 +22,10 @@ public class BordersListener implements Listener {
         double toZ = to.getZ();
 
 
-        List<Integer> xMapBorders = mainConfig.getIntegerList("borders.map.x");
-        List<Integer> zMapBorders = mainConfig.getIntegerList("borders.map.z");
-        List<Integer> xCityBorders = mainConfig.getIntegerList("borders.city.x");
-        List<Integer> zCityBorders = mainConfig.getIntegerList("borders.city.z");
+        List<Integer> xMapBorders = BCTGlobal.getConfig().getIntegerList("borders.map.x");
+        List<Integer> zMapBorders = BCTGlobal.getConfig().getIntegerList("borders.map.z");
+        List<Integer> xCityBorders = BCTGlobal.getConfig().getIntegerList("borders.city.x");
+        List<Integer> zCityBorders = BCTGlobal.getConfig().getIntegerList("borders.city.z");
 
         if (!player.hasPermission("bctglobal.borders.map")) {
             if (!xMapBorders.isEmpty()) {

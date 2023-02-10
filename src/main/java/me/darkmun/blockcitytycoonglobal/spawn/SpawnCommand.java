@@ -1,5 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.spawn;
 
+import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,14 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.darkmun.blockcitytycoonglobal.storages.Configs.mainConfig;
 public class SpawnCommand implements CommandExecutor {
 
     private static final Map<UUID, SpawnTimer> spawnTimers = new HashMap<>();
-
-    private final int spawnX = mainConfig.getInt("spawn.x");
-    private final int spawnY = mainConfig.getInt("spawn.y");
-    private final int spawnZ = mainConfig.getInt("spawn.z");
+    private static final BlockCityTycoonGlobal BCTGlobal = BlockCityTycoonGlobal.getPlugin();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -44,6 +41,9 @@ public class SpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             UUID playerUID = player.getUniqueId();
             if (args.length == 0) {
+                final int spawnX = BCTGlobal.getConfig().getInt("spawn.x");
+                final int spawnY = BCTGlobal.getConfig().getInt("spawn.y");
+                final int spawnZ = BCTGlobal.getConfig().getInt("spawn.z");
                 if (player.hasPermission("bctglobal.donate.instantspawn")) {
                     Location spawnLocation = new Location(player.getWorld(), spawnX, spawnY, spawnZ);
                     player.teleport(spawnLocation);

@@ -11,9 +11,9 @@ public class GuideBook extends ItemStack {
     public GuideBook() {
         super(Material.WRITTEN_BOOK);
         BookMeta book = (BookMeta) this.getItemMeta();
-        book.setTitle(bookConfig.getString("title"));
-        book.setAuthor(bookConfig.getString("author"));
-        book.setPages(bookConfig.getStringList("pages"));
+        book.setTitle(bookConfig.getConfig().getString("title"));
+        book.setAuthor(bookConfig.getConfig().getString("author"));
+        book.setPages(bookConfig.getConfig().getStringList("pages"));
 
         this.setItemMeta(book);
     }
