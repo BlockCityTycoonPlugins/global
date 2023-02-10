@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 public class SellCommand implements CommandExecutor {
@@ -49,7 +50,7 @@ public class SellCommand implements CommandExecutor {
                             player.sendMessage(ChatColor.GOLD + "У вас нет ресурсов для продажи");
                         } else {
                             BlockCityTycoonGlobal.getEconomy().depositPlayer(player, allSoldValue);
-                            player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + allSoldValue + "$");
+                            sendSellMessage(allSoldValue, player);
                         }
                     } else {
                         try {
@@ -64,7 +65,7 @@ public class SellCommand implements CommandExecutor {
                                         assert materialItemStack != null;
                                         BlockCityTycoonGlobal.getEconomy().depositPlayer(player, materialSellValue);
                                         materialItemStack.setAmount(materialItemStack.getAmount() - 1);
-                                        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + materialSellValue + "$");
+                                        sendSellMessage(materialSellValue, player);
                                     } else {
                                         double allSoldValue = 0;
                                         if (args[2].equals("all")) {
@@ -102,7 +103,7 @@ public class SellCommand implements CommandExecutor {
                                             }
                                         }
                                         BlockCityTycoonGlobal.getEconomy().depositPlayer(player, allSoldValue);
-                                        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + allSoldValue + "$");
+                                        sendSellMessage(allSoldValue, player);
                                     }
                                 } else {
                                     player.sendMessage(ChatColor.GOLD + "У вас нет этого материала для продажи");  // вообще как-то тупо все отправлять sender'у, а тут отправить player'у
@@ -154,6 +155,26 @@ public class SellCommand implements CommandExecutor {
             default:
                 return false;
         }
+    }
+
+    private void sendSellMessage(double soldValue, Player player) {
+        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + formatNumber(soldValue) + " $");
+    }
+
+    private String formatNumber(double num) {
+        String[] units = new String[] {"тыс.", "млн.", "млрд.", "трлн.", "квдр.", "квнт.", "скст."};
+        String result;
+        DecimalFormat df;
+        df = new DecimalFormat("#.###");
+
+        result = df.format(num);
+        double curNum = num;
+
+        for (int i = 0; curNum/1000d >= 1; i++) {
+            curNum = curNum/1000d;
+            result = df.format(curNum) + units[i];
+        }
+        return result;
     }
 
     private static double getMaterialSellValue(Material material) {

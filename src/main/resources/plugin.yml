@@ -4,6 +4,8 @@ main: me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal
 authors: [ Darkmun ]
 depend: [ProtocolLib, PacketWrapper, Vault]
 commands:
+  bctglobal:
+    description: Команда для релоада плагина (ну типо))
   top:
     description: Показывает топ-10 игроков по численности. С аргументом enable отображает топ в уровне игрока (обновляется каждые несколько секунд).
   sell:
@@ -13,4 +15,12 @@ commands:
   spawn:
     description: Телепортация на спавн раз в 30 минут
   flight:
-    description: Позволяет давать игроку/забирать у игрока возможность к полету
+    description: Даёт/забирает у игрока возможность к полету
+  speed:
+    description: Увеличивает/уменьшает скорость игроку
+  sellall:
+    description: Даёт/забирает возможность продать сразу все ресурсы из инвентаря
+  instantspawn:
+    description: Даёт/забирает возможность мгновенного спавна
+  automelting:
+    description: Даёт/забирает возможность автопереплавки при вскапывании блоков

@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 public class BookTestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && sender.hasPermission("bctglobal.book")) {
             Player player = (Player) sender;
             Inventory inventory = player.getInventory();
             Bukkit.getLogger().info("First Written book: " + inventory.first(Material.WRITTEN_BOOK));

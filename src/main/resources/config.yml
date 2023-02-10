@@ -2,6 +2,10 @@ enable: true
 hide-players: false
 disable-damage: true
 disable-block-change: true
+disable-move-inventory-items: true
+first-join-message:
+  - §cПриветствуем на сервере
+  -      §cУдачной игры!
 top-update-time: 10  #seconds
 spawn:
   x: -82

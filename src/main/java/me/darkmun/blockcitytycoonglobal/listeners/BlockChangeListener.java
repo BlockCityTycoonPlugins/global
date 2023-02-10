@@ -23,8 +23,8 @@ public class BlockChangeListener extends PacketAdapter {
         super(plugin, types);
     }*/
 
-    public BlockChangeListener(Plugin plugin, ListenerPriority listenerPriority, PacketType... types) {
-        super(plugin, listenerPriority, types);
+    public BlockChangeListener(Plugin plugin, ListenerPriority listenerPriority) {
+        super(plugin, listenerPriority, PacketType.Play.Server.BLOCK_CHANGE);
     }
 
     @Override

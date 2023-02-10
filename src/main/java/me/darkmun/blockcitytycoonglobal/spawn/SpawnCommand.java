@@ -17,6 +17,9 @@ public class SpawnCommand implements CommandExecutor {
 
     private static final Map<UUID, SpawnTimer> spawnTimers = new HashMap<>();
 
+    private final int spawnX = mainConfig.getInt("spawn.x");
+    private final int spawnY = mainConfig.getInt("spawn.y");
+    private final int spawnZ = mainConfig.getInt("spawn.z");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -41,21 +44,24 @@ public class SpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             UUID playerUID = player.getUniqueId();
             if (args.length == 0) {
-                SpawnTimer playerSpawnTimer = spawnTimers.get(playerUID);
-                if (playerSpawnTimer != null && !playerSpawnTimer.isSpawnEnabled()) {
-                    player.sendMessage(ChatColor.GOLD + "Телепортация на спавн станет доступна через: " + playerSpawnTimer.getRemainingTime());
-                } else {
-                    int spawnX = mainConfig.getInt("spawn.x");
-                    int spawnY = mainConfig.getInt("spawn.y");
-                    int spawnZ = mainConfig.getInt("spawn.z");
+                if (player.hasPermission("bctglobal.donate.instantspawn")) {
                     Location spawnLocation = new Location(player.getWorld(), spawnX, spawnY, spawnZ);
-
-                    if (playerSpawnTimer == null) {
-                        playerSpawnTimer = new SpawnTimer();
-                        spawnTimers.put(playerUID, playerSpawnTimer);
-                    }
-                    playerSpawnTimer.startWork();
                     player.teleport(spawnLocation);
+                } else {
+                    SpawnTimer playerSpawnTimer = spawnTimers.get(playerUID);
+                    if (playerSpawnTimer != null && !playerSpawnTimer.isSpawnEnabled()) {
+                        player.sendMessage(ChatColor.GOLD + "Телепортация на спавн станет доступна через: " + playerSpawnTimer.getRemainingTime());
+                    } else {
+                        Location spawnLocation = new Location(player.getWorld(), spawnX, spawnY, spawnZ);
+
+                        if (playerSpawnTimer == null) {
+                            playerSpawnTimer = new SpawnTimer();
+                            spawnTimers.put(playerUID, playerSpawnTimer);
+                        }
+                        playerSpawnTimer.startWork();
+                        player.teleport(spawnLocation);
+                    }
+
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "В команде не должно быть аргументов");
