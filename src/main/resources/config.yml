@@ -6,7 +6,21 @@ disable-move-inventory-items: true
 first-join-message:
   - §cПриветствуем на сервере
   -      §cУдачной игры!
-top-update-time: 10  #seconds
+top:
+  update-time: 30  #seconds
+  population-holo:
+    x: -82
+    y: 38
+    z: -2.5
+  balance-holo:
+    x: -76
+    y: 38
+    z: -7.5
+no-log-for-commands:
+  - /minecraft:me
+  - /me
+  - /tell
+  - /msg
 spawn:
   x: -82
   y: 40

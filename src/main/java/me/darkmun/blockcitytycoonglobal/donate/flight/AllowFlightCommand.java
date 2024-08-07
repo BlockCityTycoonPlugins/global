@@ -16,7 +16,7 @@ public class AllowFlightCommand implements CommandExecutor {
         if (sender.hasPermission("bct.donate.manage")) {
             if (args.length == 2) {
                 OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[1]);
-                if (offPlayer.hasPlayedBefore()) {
+                if (offPlayer.hasPlayedBefore() || offPlayer.isOnline()) {
                     if (args[0].equals("allow")) {
                         setAllowFlightToPlayer(true, offPlayer);
                         BlockCityTycoonGlobal.permission.playerAdd(null, offPlayer, "deluxemenus.FLY_BUY");
@@ -45,8 +45,12 @@ public class AllowFlightCommand implements CommandExecutor {
     }
 
     private static void setAllowFlightToPlayer(boolean allow, OfflinePlayer offPlayer) {
-        Bukkit.getLogger().info("online");
-        offPlayer.getPlayer().setAllowFlight(allow);
+        if (offPlayer.isOnline()) {
+            Bukkit.getLogger().info("online");
+            offPlayer.getPlayer().setAllowFlight(allow);
+        } else {
+            Bukkit.getLogger().info("offline");
+        }
         if (allow) {
             BlockCityTycoonGlobal.permission.playerAdd(null, offPlayer, "bct.donate.fly");
         } else {

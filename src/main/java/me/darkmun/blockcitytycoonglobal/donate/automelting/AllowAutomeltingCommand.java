@@ -16,7 +16,7 @@ public class AllowAutomeltingCommand implements CommandExecutor {
         if (sender.hasPermission("bct.donate.manage")) {
             if (args.length == 2) {
                 OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[1]);
-                if (offPlayer.hasPlayedBefore()) {
+                if (offPlayer.hasPlayedBefore() || offPlayer.isOnline()) {
                     if (args[0].equals("allow")) {
                         BlockCityTycoonGlobal.permission.playerAdd(null, offPlayer, "bct.donate.automelting");
                         BlockCityTycoonGlobal.permission.playerAdd(null, offPlayer, "deluxemenus.AUTO_FURNACE_BUY");

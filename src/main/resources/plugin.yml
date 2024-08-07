@@ -6,6 +6,16 @@ depend: [ProtocolLib, PacketWrapper, Vault]
 commands:
   bctglobal:
     description: Команда для релоада плагина (ну типо))
+  showplayers:
+    description: Показать игроков, которые сейчас на сервере
+    aliases:
+      - showp
+      - sp
+  hideplayers:
+    description: Скрыть игроков, которые сейчас на сервере
+    aliases:
+      - hidep
+      - hp
   top:
     description: Показывает топ-10 игроков по численности. С аргументом enable отображает топ в уровне игрока (обновляется каждые несколько секунд).
   sell:

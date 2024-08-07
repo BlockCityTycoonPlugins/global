@@ -1,5 +1,6 @@
 package me.darkmun.blockcitytycoonglobal.listeners;
 
+import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -11,8 +12,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class HidePlayers implements Listener {
 
+    private final BlockCityTycoonGlobal pluginInstance = BlockCityTycoonGlobal.getPlugin();
 
-    @EventHandler @SuppressWarnings("deprecation")
+    @EventHandler
     public void onJoinEvent(PlayerJoinEvent e) {
         Player pl = e.getPlayer();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -20,7 +22,6 @@ public class HidePlayers implements Listener {
             pl.hidePlayer(player);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ((CraftPlayer)pl).getHandle()));
             ((CraftPlayer) pl).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ((CraftPlayer)player).getHandle()));
-
         }
     }
 

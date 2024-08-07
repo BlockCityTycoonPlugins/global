@@ -23,7 +23,7 @@ public class IncreaseSpeedCommand implements CommandExecutor {
         if (sender.hasPermission("bct.donate.manage")) {
             if (args.length == 3) {
                 OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[2]);
-                if (offPlayer.hasPlayedBefore()) {
+                if (offPlayer.hasPlayedBefore() || offPlayer.isOnline()) {
                     try {
                         int percent = Integer.parseInt(args[1]);
                         if (percent >= 0) {

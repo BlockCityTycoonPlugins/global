@@ -21,10 +21,10 @@ public class JoinListener implements Listener {
         Inventory inventory = player.getInventory();
 
         //Отправка сообщения при первом заходе на сервер
-        if (!player.hasPlayedBefore()) {
+        /*if (!player.hasPlayedBefore()) {
             List<String> messages = BCTGlobal.getConfig().getStringList("first-join-message");
             player.sendMessage(messages.toArray(new String[0]));
-        }
+        }*/
 
         //Выдача книжки, если ее нет в инвентаре
         //if (inventory.first(Material.WRITTEN_BOOK) == BOOK_NOT_FOUND) {

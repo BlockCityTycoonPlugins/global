@@ -1,6 +1,7 @@
 package me.darkmun.blockcitytycoonglobal.commands;
 
 import me.darkmun.blockcitytycoonglobal.BlockCityTycoonGlobal;
+import me.darkmun.blockcitytycoonglobal.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -158,23 +159,7 @@ public class SellCommand implements CommandExecutor {
     }
 
     private void sendSellMessage(double soldValue, Player player) {
-        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + formatNumber(soldValue) + " $");
-    }
-
-    private String formatNumber(double num) {
-        String[] units = new String[] {"тыс.", "млн.", "млрд.", "трлн.", "квдр.", "квнт.", "скст."};
-        String result;
-        DecimalFormat df;
-        df = new DecimalFormat("#.###");
-
-        result = df.format(num);
-        double curNum = num;
-
-        for (int i = 0; curNum/1000d >= 1; i++) {
-            curNum = curNum/1000d;
-            result = df.format(curNum) + units[i];
-        }
-        return result;
+        player.sendMessage(ChatColor.GREEN + "За продажу вы получили " + Utility.formatNumber(soldValue) + " $");
     }
 
     private static double getMaterialSellValue(Material material) {
